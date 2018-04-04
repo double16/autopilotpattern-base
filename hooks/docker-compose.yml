@@ -1,0 +1,26 @@
+---
+version: "2.1"
+
+services:
+  consul:
+    image: pdouble16/autopilotpattern-consul:1.0.6-r2
+    environment:
+      CONSUL: consul
+    dns: 127.0.0.1
+    mem_limit: 64M
+    cpu_quota: 6250
+    #cpus: '0.0625'
+    ports:
+      - 8500
+
+  myservice:
+    image: ${IMAGE_NAME:-pdouble16/autopilotpattern-base:latest}
+    depends_on:
+      - consul
+    environment:
+      CONSUL: consul
+      CONSUL_AGENT: 1
+    dns: 127.0.0.1
+    mem_limit: 64M
+    cpu_quota: 6250
+    #cpus: '0.0625'
