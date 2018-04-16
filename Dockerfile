@@ -1,11 +1,16 @@
 FROM alpine:3.7
 
-ENV CONSUL_VERSION="1.0.6" \
+ARG BUILD_DATE
+ARG DOCKERFILE_PATH
+ARG SOURCE_REF
+ARG SOURCE_TYPE
+
+ENV CONSUL_VERSION="1.0.7" \
     CONTAINERPILOT_VER="3.7.0" CONTAINERPILOT="/etc/containerpilot.json5" \
     NODE_EXPORTER_VERSION="0.15.2"
 
-RUN apk --no-cache add curl \
-    && export CONSUL_CHECKSUM=bcc504f658cef2944d1cd703eda90045e084a15752d23c038400cf98c716ea01 \
+RUN apk --no-cache add curl bash \
+    && export CONSUL_CHECKSUM=6c2c8f6f5f91dcff845f1b2ce8a29bd230c11397c448ce85aae6dacd68aa4c14 \
     && curl --retry 7 --fail -vo /tmp/consul.zip "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip" \
     && echo "${CONSUL_CHECKSUM}  /tmp/consul.zip" | sha256sum -c \
     && unzip /tmp/consul -d /usr/local/bin \
@@ -22,7 +27,7 @@ RUN apk --no-cache add curl \
     && chmod +x /usr/local/bin/node_exporter \
     && rm -rf /tmp/*
 
-COPY bin/consul-manage /usr/local/bin/
+COPY bin/consul-manage /usr/local/bin/consul-manage
 COPY etc/consul.hcl /etc/consul/consul.hcl.orig
 COPY etc/containerpilot.json5 ${CONTAINERPILOT}
 
@@ -36,7 +41,7 @@ LABEL maintainer="Patrick Double <pat@patdouble.com>" \
       org.label-schema.vendor="https://github.com/double16" \
       org.label-schema.name="Autopilot Multi-Stage Base with Consul and Prometheus Monitoring" \
       org.label-schema.url="https://github.com/double16/autopilotpattern-base" \
-      org.label-schema.docker.dockerfile="Dockerfile" \
+      org.label-schema.docker.dockerfile="${DOCKERFILE_PATH}/Dockerfile" \
       org.label-schema.vcs-ref=$SOURCE_REF \
-      org.label-schema.vcs-type='git' \
+      org.label-schema.vcs-type=$SOURCE_TYPE \
       org.label-schema.vcs-url="https://github.com/double16/autopilotpattern-base.git"

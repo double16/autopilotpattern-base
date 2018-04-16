@@ -49,6 +49,8 @@ function test_suite {
 
   retry 5 docker run --rm --network container:autopilotpatternbasetest_consul_1 appropriate/curl -s -o /dev/null http://localhost:9100/metrics
   retry 5 passing_service node-exporter
+
+  retry 5 docker run --rm --network container:autopilotpatternbasetest_myservice_1 appropriate/curl -s -o /dev/null http://localhost:8500/v1/status/leader
 }
 
 export IMAGE_NAME
