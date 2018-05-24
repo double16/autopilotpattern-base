@@ -3,7 +3,7 @@ version: "2.1"
 
 services:
   consul:
-    image: pdouble16/autopilotpattern-consul:1.0.6-r2
+    image: pdouble16/autopilotpattern-consul:1.1.0-r1
     environment:
       CONSUL: consul
     dns: 127.0.0.1

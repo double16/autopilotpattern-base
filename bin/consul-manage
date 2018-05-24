@@ -11,9 +11,9 @@ preStart() {
     _log "Updating consul advertise address to ${CONTAINERPILOT_CONSUL_AGENT_IP}"
     sed -i "s/CONTAINERPILOT_CONSUL_AGENT_IP/${CONTAINERPILOT_CONSUL_AGENT_IP}/" /etc/consul/consul.hcl
 
-    [ -n "${CONSUL_DNS}" ] || CONSUL_DNS="8.8.8.8,8.8.4.4"
+    [ -n "${CONSUL_DNS}" ] || CONSUL_DNS="$(grep ^nameserver /etc/resolv.conf | grep -oE '[0-9\.]+' | tr [:space:] ,)8.8.8.8,8.8.4.4"
     _log "Updating consul DNS to ${CONSUL_DNS}"
-    sed -i "s/CONSUL_DNS/$(echo ${CONSUL_DNS} | sed -e 's/,/","/' -e 's/^/"/' -e 's/$/"/')/" /etc/consul/consul.hcl
+    sed -i "s/CONSUL_DNS/$(echo ${CONSUL_DNS} | sed -e 's/,/","/g' -e 's/^/"/' -e 's/$/"/')/" /etc/consul/consul.hcl
 
     if [ -n "$CONSUL_DATACENTER_NAME" ]; then
         _log "Updating consul datacenter name (specified: '${CONSUL_DATACENTER_NAME}' )"
