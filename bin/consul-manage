@@ -53,6 +53,23 @@ health() {
     exit $RESULT
 }
 
+# Check for passing service(s). The service names are the arguments to the function.
+# Exits 0 for all passing.
+# Exits non-zero if no services are given to check.
+check() {
+    if [ $# = 0 ]; then
+        exit 1
+    fi
+
+    for SERVICE in $@; do
+        if [[ ! "$(curl -s http://${CONSUL:-consul}:8500/v1/health/checks/${SERVICE} | jq -r .[].Status | uniq)" =~ "passing" ]]; then
+            exit 2
+        fi
+    done
+
+    exit 0
+}
+
 _log() {
     echo "    $(date -u '+%Y-%m-%d %H:%M:%S') containerpilot: $@"
 }
