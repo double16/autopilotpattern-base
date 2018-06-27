@@ -1,16 +1,15 @@
 FROM alpine:3.7
 
-ARG BUILD_DATE
 ARG DOCKERFILE_PATH
 ARG SOURCE_REF
 ARG SOURCE_TYPE
 
-ENV CONSUL_VERSION="1.1.0" \
+ENV CONSUL_VERSION="1.2.0" \
     CONTAINERPILOT_VER="3.8.0" CONTAINERPILOT="/etc/containerpilot.json5" \
-    NODE_EXPORTER_VERSION="0.15.2"
+    NODE_EXPORTER_VERSION="0.16.0"
 
 RUN apk --no-cache add curl bash \
-    && export CONSUL_CHECKSUM=09c40c8b5be868003810064916d8460bff334ccfb59a5046390224b27e052c45 \
+    && export CONSUL_CHECKSUM=85d84ea3f6c68d52549a29b00fd0035f72c2eabff672ae46ca643cb407ef94b4 \
     && curl --retry 7 --fail -vo /tmp/consul.zip "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip" \
     && echo "${CONSUL_CHECKSUM}  /tmp/consul.zip" | sha256sum -c \
     && unzip /tmp/consul -d /usr/local/bin \
@@ -36,7 +35,6 @@ CMD ["/usr/local/bin/containerpilot"]
 HEALTHCHECK --interval=60s --timeout=10s --retries=3 CMD ["/usr/local/bin/consul-manage", "health"] || exit 1
 
 LABEL maintainer="Patrick Double <pat@patdouble.com>" \
-      org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.license="MPL-2.0" \
       org.label-schema.vendor="https://github.com/double16" \
       org.label-schema.name="Autopilot Multi-Stage Base with Consul and Prometheus Monitoring" \
