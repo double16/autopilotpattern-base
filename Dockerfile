@@ -4,12 +4,12 @@ ARG DOCKERFILE_PATH
 ARG SOURCE_REF
 ARG SOURCE_TYPE
 
-ENV CONSUL_VERSION="1.2.0" \
+ENV CONSUL_VERSION="1.2.1" \
     CONTAINERPILOT_VER="3.8.0" CONTAINERPILOT="/etc/containerpilot.json5" \
     NODE_EXPORTER_VERSION="0.16.0"
 
 RUN apk --no-cache add curl bash \
-    && export CONSUL_CHECKSUM=85d84ea3f6c68d52549a29b00fd0035f72c2eabff672ae46ca643cb407ef94b4 \
+    && export CONSUL_CHECKSUM=e4146334be453146890023303da3e0c815669e108a18fb7d742745df3414a31a \
     && curl --retry 7 --fail -vo /tmp/consul.zip "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip" \
     && echo "${CONSUL_CHECKSUM}  /tmp/consul.zip" | sha256sum -c \
     && unzip /tmp/consul -d /usr/local/bin \
@@ -37,7 +37,7 @@ HEALTHCHECK --interval=60s --timeout=10s --retries=3 CMD ["/usr/local/bin/consul
 LABEL maintainer="Patrick Double <pat@patdouble.com>" \
       org.label-schema.license="MPL-2.0" \
       org.label-schema.vendor="https://github.com/double16" \
-      org.label-schema.name="Autopilot Multi-Stage Base with Consul and Prometheus Monitoring" \
+    org.label-schema.name="Autopilot Multi-Stage Base with Consul ${CONSUL_VERSION} and Prometheus Monitoring" \
       org.label-schema.url="https://github.com/double16/autopilotpattern-base" \
       org.label-schema.docker.dockerfile="${DOCKERFILE_PATH}/Dockerfile" \
       org.label-schema.vcs-ref=$SOURCE_REF \
