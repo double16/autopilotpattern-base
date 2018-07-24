@@ -32,7 +32,7 @@ COPY etc/containerpilot.json5 ${CONTAINERPILOT}
 
 CMD ["/usr/local/bin/containerpilot"]
 
-HEALTHCHECK --interval=60s --timeout=10s --retries=3 CMD ["/usr/local/bin/consul-manage", "health"] || exit 1
+HEALTHCHECK --interval=60s --timeout=10s --retries=3 CMD /usr/local/bin/consul-manage health || exit 1
 
 LABEL maintainer="Patrick Double <pat@patdouble.com>" \
       org.label-schema.license="MPL-2.0" \
