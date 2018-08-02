@@ -1,15 +1,15 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
 ARG DOCKERFILE_PATH
 ARG SOURCE_REF
 ARG SOURCE_TYPE
 
-ENV CONSUL_VERSION="1.2.1" \
+ENV CONSUL_VERSION="1.2.2" \
     CONTAINERPILOT_VER="3.8.0" CONTAINERPILOT="/etc/containerpilot.json5" \
     NODE_EXPORTER_VERSION="0.16.0"
 
 RUN apk --no-cache add curl bash \
-    && export CONSUL_CHECKSUM=e4146334be453146890023303da3e0c815669e108a18fb7d742745df3414a31a \
+    && export CONSUL_CHECKSUM=7fa3b287b22b58283b8bd5479291161af2badbc945709eb5412840d91b912060 \
     && curl --retry 7 --fail -vo /tmp/consul.zip "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip" \
     && echo "${CONSUL_CHECKSUM}  /tmp/consul.zip" | sha256sum -c \
     && unzip /tmp/consul -d /usr/local/bin \
